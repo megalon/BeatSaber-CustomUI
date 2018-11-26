@@ -90,11 +90,11 @@ namespace BeatSaberCustomUI
             }
         }
 
-        public static ToggleOption CreateToggleOption(string optionName)
+        public static ToggleOption CreateToggleOption(string optionName, string hintText = "")
         {
             lock (Instance)
             {
-                ToggleOption ret = new ToggleOption(optionName);
+                ToggleOption ret = new ToggleOption(optionName, hintText);
                 Instance.customOptions.Add(ret);
                 return ret;
             }
@@ -103,11 +103,11 @@ namespace BeatSaberCustomUI
         public void Build()
         {
             //Grab necessary references
-            SoloFreePlayFlowCoordinator _sldvc = Resources.FindObjectsOfTypeAll<SoloFreePlayFlowCoordinator>().First();
-            GameplaySetupViewController _govc = _sldvc.GetField<GameplaySetupViewController>("_gameplaySetupViewController");
+            SoloFreePlayFlowCoordinator sfpfc = Resources.FindObjectsOfTypeAll<SoloFreePlayFlowCoordinator>().First();
+            GameplaySetupViewController gsvc = sfpfc.GetField<GameplaySetupViewController>("_gameplaySetupViewController");
 
             //Get reference to the switch container
-            RectTransform container = (RectTransform)_govc.transform.Find("GameplayModifiers").Find("RightColumn");
+            RectTransform container = (RectTransform)gsvc.transform.Find("GameplayModifiers").Find("RightColumn");
 
             if (!initialized)
             {
@@ -138,13 +138,6 @@ namespace BeatSaberCustomUI
                     if (Instance._listIndex <= 0) _pageUpButton.interactable = false;
                     if (Instance.customOptions.Count > 0) _pageDownButton.interactable = true;
                 });
-
-                
-                // Make sure the object names are the same as the originals
-                noFail.name = "NoFail";
-                noObstacles.name = "NoObstacles";
-                noBombs.name = "NoBombs";
-                slowerSong.name = "SlowerSong";
 
                 //Create down button
                 _pageDownButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().First(x => (x.name == "PageDownButton")), container);

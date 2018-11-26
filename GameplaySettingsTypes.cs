@@ -13,7 +13,9 @@ namespace BeatSaberCustomUI
     {
         public GameObject gameObject;
         public string optionName;
+        public string hintText;
         public bool initialized;
+        public GameplayModifierToggle instance;
         public abstract void Instantiate();
     }
 
@@ -23,9 +25,10 @@ namespace BeatSaberCustomUI
         public event Action<bool> OnToggle;
         public bool GetValue = false;
 
-        public ToggleOption(string optionName)
+        public ToggleOption(string optionName, string hintText)
         {
             this.optionName = optionName;
+            this.hintText = hintText;
         }
 
         public override void Instantiate()
@@ -34,9 +37,9 @@ namespace BeatSaberCustomUI
 
             //We have to find our own target
             //TODO: Clean up time complexity issue. This is called for each new option
-            SoloFreePlayFlowCoordinator _sldvc = Resources.FindObjectsOfTypeAll<SoloFreePlayFlowCoordinator>().First();
-            GameplaySetupViewController _govc = _sldvc.GetField<GameplaySetupViewController>("_gameplaySetupViewController");
-            RectTransform container = (RectTransform)_govc.transform.Find("GameplayModifiers").Find("RightColumn");
+            SoloFreePlayFlowCoordinator sfpfc = Resources.FindObjectsOfTypeAll<SoloFreePlayFlowCoordinator>().First();
+            GameplaySetupViewController gsvc = sfpfc.GetField<GameplaySetupViewController>("_gameplaySetupViewController");
+            RectTransform container = (RectTransform)gsvc.transform.Find("GameplayModifiers").Find("RightColumn");
 
             gameObject = UnityEngine.Object.Instantiate(container.Find("NoFail").gameObject, container);
             gameObject.name = optionName;
@@ -45,25 +48,34 @@ namespace BeatSaberCustomUI
             gameObject.transform.localPosition = Vector3.zero;
             gameObject.transform.localScale = Vector3.one;
             gameObject.transform.rotation = Quaternion.identity;
-            gameObject.SetActive(false); //All options start disabled
 
-            var tog = gameObject.GetComponentInChildren<GameplayModifierToggle>();
-            if (tog != null)
+            var gmt = gameObject.GetComponentInChildren<GameplayModifierToggle>();
+            if (gmt != null)
             {
-                tog.toggle.isOn = GetValue;
-                tog.toggle.onValueChanged.RemoveAllListeners();
-                tog.toggle.onValueChanged.AddListener((bool e) => { OnToggle?.Invoke(e); });
+                gmt.toggle.isOn = GetValue;
+                gmt.toggle.onValueChanged.RemoveAllListeners();
+                gmt.toggle.onValueChanged.AddListener((bool e) => { OnToggle?.Invoke(e); });
+                instance = gmt;
             }
-
-            SharedCoroutineStarter.instance.StartCoroutine(OnIsSet(tog, optionName));
+            SharedCoroutineStarter.instance.StartCoroutine(OnIsSet());
 
             initialized = true;
         }
-
-        private IEnumerator OnIsSet(GameplayModifierToggle t, string optionName)
+        
+        private IEnumerator OnIsSet()
         {
-            while (t.GetPrivateField<TextMeshProUGUI>("_nameText").text == "!NOT SET!") yield return null;
-            t.GetPrivateField<TextMeshProUGUI>("_nameText").text = optionName;
+            while (instance.GetPrivateField<TextMeshProUGUI>("_nameText").text == "!NOT SET!") yield return null;
+            gameObject.SetActive(false); //All options start disabled
+            instance.GetPrivateField<TextMeshProUGUI>("_nameText").text = optionName;
+            if (hintText != String.Empty)
+            {
+                var hoverHint = instance.GetPrivateField<HoverHint>("_hoverHint");
+                hoverHint.text = hintText;
+                hoverHint.name = optionName;
+                hoverHint.enabled = true;
+                var hoverHintController = Resources.FindObjectsOfTypeAll<HoverHintController>().First();
+                hoverHint.SetPrivateField("_hoverHintController", hoverHintController);
+            }
         }
 
     }
@@ -85,9 +97,9 @@ namespace BeatSaberCustomUI
 
             //We have to find our own target
             //TODO: Clean up time complexity issue. This is called for each new option
-            SoloFreePlayFlowCoordinator _sldvc = Resources.FindObjectsOfTypeAll<SoloFreePlayFlowCoordinator>().First();
-            GameplaySetupViewController _govc = _sldvc.GetField<GameplaySetupViewController>("_gameplaySetupViewController");
-            RectTransform container = (RectTransform)_govc.transform.Find("GameplayModifiers").Find("RightColumn");
+            SoloFreePlayFlowCoordinator sfpfc = Resources.FindObjectsOfTypeAll<SoloFreePlayFlowCoordinator>().First();
+            GameplaySetupViewController gsvc = sfpfc.GetField<GameplaySetupViewController>("_gameplaySetupViewController");
+            RectTransform container = (RectTransform)gsvc.transform.Find("GameplayModifiers").Find("RightColumn");
 
             var volumeSettings = Resources.FindObjectsOfTypeAll<VolumeSettingsController>().FirstOrDefault();
             gameObject = UnityEngine.Object.Instantiate(volumeSettings.gameObject, container);
