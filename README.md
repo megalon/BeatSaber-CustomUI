@@ -1,5 +1,5 @@
 # Example Usage
-
+*It's important that you setup your settings options in the SceneManager_sceneLoaded event! It can't be the SceneManager_activeSceneChanged event!*
 ```cs
 bool toggleValue = false;
 private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1) 
