@@ -13,7 +13,7 @@ private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
       toggleValue = e;
     });
 
-    var settingsSubmenu = SettingsUI.CreateSubMenu("Test Submenu 1");
+    var settingsSubmenu = SettingsUI.CreateSubMenu("Test Submenu");
     var testInt = settingsSubmenu.AddInt("Test Int", 0, 100, 1);
     testInt.GetValue += delegate { return ModPrefs.GetInt(Plugin.Name, "Test Int", 0, true); };
     testInt.SetValue += delegate (int value) { ModPrefs.SetInt(Plugin.Name, "Test Int", value); };
