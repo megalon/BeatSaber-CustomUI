@@ -52,10 +52,8 @@ namespace CustomUI.GameplaySettings
                 initialized = false;
                 Instance = null;
             }
-            else if (to.name == "Menu")
-            {
+            else
                 Build();
-            }
         }
 
         //Returns a list of options for the current page index
