@@ -13,6 +13,7 @@ namespace CustomUI.GameplaySettings
     {
         public GameObject gameObject;
         public string optionName;
+        public Sprite optionIcon;
         public string hintText;
         public bool initialized;
         public abstract void Instantiate();
@@ -24,10 +25,11 @@ namespace CustomUI.GameplaySettings
         public event Action<bool> OnToggle;
         public bool GetValue = false;
 
-        public ToggleOption(string optionName, string hintText)
+        public ToggleOption(string optionName, string hintText, Sprite optionIcon)
         {
             this.optionName = optionName;
             this.hintText = hintText;
+            this.optionIcon = optionIcon;
         }
 
         public override void Instantiate()
@@ -60,7 +62,7 @@ namespace CustomUI.GameplaySettings
                 _gameplayModifier.SetPrivateField("_modifierName", optionName);
                 _gameplayModifier.SetPrivateField("_hintText", hintText);
                 _gameplayModifier.SetPrivateField("_multiplier", 0.0f);
-                _gameplayModifier.SetPrivateField("_icon", gmt.GetPrivateField<GameplayModifierParamsSO>("_gameplayModifier").icon);
+                _gameplayModifier.SetPrivateField("_icon", optionIcon == null ? gmt.GetPrivateField<GameplayModifierParamsSO>("_gameplayModifier").icon : optionIcon);
                 gmt.SetPrivateField("_gameplayModifier", _gameplayModifier);
 
                 if (hintText != String.Empty)

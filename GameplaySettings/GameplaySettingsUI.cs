@@ -90,11 +90,11 @@ namespace CustomUI.GameplaySettings
             }
         }
 
-        public static ToggleOption CreateToggleOption(string optionName, string hintText = "")
+        public static ToggleOption CreateToggleOption(string optionName, string hintText = "", Sprite optionIcon = null)
         {
             lock (Instance)
             {
-                ToggleOption ret = new ToggleOption(optionName, hintText);
+                ToggleOption ret = new ToggleOption(optionName, hintText, optionIcon);
                 Instance.customOptions.Add(ret);
                 return ret;
             }
