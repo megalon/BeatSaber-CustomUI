@@ -10,7 +10,7 @@ using UnityEngine;
  * (https://github.com/xyonico/BeatSaberSongLoader/blob/master/SongLoaderPlugin/ReflectionUtil.cs)
  */
 
-namespace CustomUI
+namespace CustomUI.Utilities
 {
     public static class ReflectionUtil
     {

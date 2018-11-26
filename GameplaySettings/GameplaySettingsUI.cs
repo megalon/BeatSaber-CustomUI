@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CustomUI.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,10 +53,8 @@ namespace CustomUI.GameplaySettings
                 initialized = false;
                 Instance = null;
             }
-            else if (to.name == "Menu")
-            {
+            else
                 Build();
-            }
         }
 
         //Returns a list of options for the current page index
@@ -92,11 +91,11 @@ namespace CustomUI.GameplaySettings
             }
         }
 
-        public static ToggleOption CreateToggleOption(string optionName, string hintText = "")
+        public static ToggleOption CreateToggleOption(string optionName, string hintText = "", Sprite optionIcon = null)
         {
             lock (Instance)
             {
-                ToggleOption ret = new ToggleOption(optionName, hintText);
+                ToggleOption ret = new ToggleOption(optionName, hintText, optionIcon);
                 Instance.customOptions.Add(ret);
                 return ret;
             }

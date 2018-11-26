@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using CustomUI.Utilities;
+using CustomUI.Settings;
 
 namespace CustomUI.GameplaySettings
 {
@@ -14,9 +15,9 @@ namespace CustomUI.GameplaySettings
     {
         public GameObject gameObject;
         public string optionName;
+        public Sprite optionIcon;
         public string hintText;
         public bool initialized;
-        public GameplayModifierToggle instance;
         public abstract void Instantiate();
     }
 
@@ -26,10 +27,11 @@ namespace CustomUI.GameplaySettings
         public event Action<bool> OnToggle;
         public bool GetValue = false;
 
-        public ToggleOption(string optionName, string hintText)
+        public ToggleOption(string optionName, string hintText, Sprite optionIcon)
         {
             this.optionName = optionName;
             this.hintText = hintText;
+            this.optionIcon = optionIcon;
         }
 
         public override void Instantiate()
@@ -49,38 +51,36 @@ namespace CustomUI.GameplaySettings
             gameObject.transform.localPosition = Vector3.zero;
             gameObject.transform.localScale = Vector3.one;
             gameObject.transform.rotation = Quaternion.identity;
-
-            var gmt = gameObject.GetComponentInChildren<GameplayModifierToggle>();
+            gameObject.SetActive(false);
+            
+            var gmt = gameObject.GetComponent<GameplayModifierToggle>();
             if (gmt != null)
             {
                 gmt.toggle.isOn = GetValue;
                 gmt.toggle.onValueChanged.RemoveAllListeners();
                 gmt.toggle.onValueChanged.AddListener((bool e) => { OnToggle?.Invoke(e); });
-                var _gameplayModifier = gmt.GetPrivateField<GameplayModifierParamsSO>("_gameplayModifier");
+
+                GameplayModifierParamsSO _gameplayModifier = new GameplayModifierParamsSO();
                 _gameplayModifier.SetPrivateField("_modifierName", optionName);
                 _gameplayModifier.SetPrivateField("_hintText", hintText);
                 _gameplayModifier.SetPrivateField("_multiplier", 0.0f);
-                instance = gmt;
+                _gameplayModifier.SetPrivateField("_icon", optionIcon == null ? gmt.GetPrivateField<GameplayModifierParamsSO>("_gameplayModifier").icon : optionIcon);
+                gmt.SetPrivateField("_gameplayModifier", _gameplayModifier);
+
+                if (hintText != String.Empty)
+                {
+                    var hoverHint = gmt.GetPrivateField<HoverHint>("_hoverHint");
+                    hoverHint.text = hintText;
+                    hoverHint.name = optionName;
+                    hoverHint.enabled = true;
+                    var hoverHintController = Resources.FindObjectsOfTypeAll<HoverHintController>().First();
+                    hoverHint.SetPrivateField("_hoverHintController", hoverHintController);
+                }
             }
-            SharedCoroutineStarter.instance.StartCoroutine(OnIsSet());
+
+           
 
             initialized = true;
-        }
-        
-        private IEnumerator OnIsSet()
-        {
-            while (instance.GetPrivateField<TextMeshProUGUI>("_nameText").text == "!NOT SET!") yield return null;
-            instance.GetPrivateField<TextMeshProUGUI>("_nameText").text = optionName;
-            if (hintText != String.Empty)
-            {
-                var hoverHint = instance.GetPrivateField<HoverHint>("_hoverHint");
-                hoverHint.text = hintText;
-                hoverHint.name = optionName;
-                hoverHint.enabled = true;
-                var hoverHintController = Resources.FindObjectsOfTypeAll<HoverHintController>().First();
-                hoverHint.SetPrivateField("_hoverHintController", hoverHintController);
-            }
-            gameObject.SetActive(false); //All options start disabled
         }
     }
 
