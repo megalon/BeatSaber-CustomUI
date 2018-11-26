@@ -103,14 +103,16 @@ namespace CustomUI.Settings
                 viewport.sizeDelta = new Vector2(0f, 48f);
                 viewport.anchoredPosition = new Vector2(0f, 0f);
 
+                RectTransform container = (RectTransform)_mainSettingsTableView.transform;
+
                 if (_pageUpButton == null)
                 {
-                    _pageUpButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().First(x => (x.name == "PageUpButton")), _mainSettingsTableView.transform, false);
+                    _pageUpButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().First(x => (x.name == "PageUpButton")), container);
 
-                    (_pageUpButton.transform as RectTransform).anchorMin = new Vector2(0.5f, 0.5f);
-                    (_pageUpButton.transform as RectTransform).anchorMax = new Vector2(0.5f, 0.5f);
-                    (_pageUpButton.transform as RectTransform).anchoredPosition = new Vector2(0f, 24f);
-                    _pageUpButton.interactable = true;
+                    _pageUpButton.transform.parent = container.parent;
+                    _pageUpButton.transform.localScale = Vector3.one;
+                    _pageUpButton.transform.localPosition -= new Vector3(0, 4.5f);
+                    _pageUpButton.interactable = false;
                     _pageUpButton.onClick.AddListener(delegate ()
                     {
                         subMenuTableViewHelper.PageScrollUp();
@@ -119,12 +121,12 @@ namespace CustomUI.Settings
 
                 if (_pageDownButton == null)
                 {
-                    _pageDownButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().First(x => (x.name == "PageDownButton")), _mainSettingsTableView.transform, false);
-                    
-                    (_pageDownButton.transform as RectTransform).anchorMin = new Vector2(0.5f, 0.5f);
-                    (_pageDownButton.transform as RectTransform).anchorMax = new Vector2(0.5f, 0.5f);
-                    (_pageDownButton.transform as RectTransform).anchoredPosition = new Vector2(0f, -24f);
-                    _pageDownButton.interactable = true;
+                    _pageDownButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().First(x => (x.name == "PageDownButton")), container);
+
+                    _pageDownButton.transform.parent = container.parent;
+                    _pageDownButton.transform.localScale = Vector3.one;
+                    _pageDownButton.transform.localPosition -= new Vector3(0, 6.5f);
+                    _pageDownButton.interactable = false;
                     _pageDownButton.onClick.AddListener(delegate ()
                     {
                         subMenuTableViewHelper.PageScrollDown();
