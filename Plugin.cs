@@ -1,7 +1,7 @@
 ﻿using IllusionPlugin;
 using UnityEngine.SceneManagement;
 
-namespace BeatSaberCustomUI
+namespace CustomUI
 {
     public class Plugin : IPlugin
     {

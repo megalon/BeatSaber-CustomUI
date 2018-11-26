@@ -8,7 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace BeatSaberCustomUI
+namespace CustomUI.GameplaySettings
 {
     public abstract class GameOption
     {
@@ -49,7 +49,6 @@ namespace BeatSaberCustomUI
             gameObject.transform.localPosition = Vector3.zero;
             gameObject.transform.localScale = Vector3.one;
             gameObject.transform.rotation = Quaternion.identity;
-            gameObject.SetActive(false); //All options start disabled
 
             var gmt = gameObject.GetComponentInChildren<GameplayModifierToggle>();
             if (gmt != null)
@@ -57,6 +56,10 @@ namespace BeatSaberCustomUI
                 gmt.toggle.isOn = GetValue;
                 gmt.toggle.onValueChanged.RemoveAllListeners();
                 gmt.toggle.onValueChanged.AddListener((bool e) => { OnToggle?.Invoke(e); });
+                var _gameplayModifier = gmt.GetPrivateField<GameplayModifierParamsSO>("_gameplayModifier");
+                _gameplayModifier.SetPrivateField("_modifierName", optionName);
+                _gameplayModifier.SetPrivateField("_hintText", hintText);
+                _gameplayModifier.SetPrivateField("_multiplier", 0.0f);
                 instance = gmt;
             }
             SharedCoroutineStarter.instance.StartCoroutine(OnIsSet());
@@ -77,6 +80,7 @@ namespace BeatSaberCustomUI
                 var hoverHintController = Resources.FindObjectsOfTypeAll<HoverHintController>().First();
                 hoverHint.SetPrivateField("_hoverHintController", hoverHintController);
             }
+            gameObject.SetActive(false); //All options start disabled
         }
     }
 

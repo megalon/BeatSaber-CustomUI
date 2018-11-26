@@ -11,7 +11,7 @@ using UnityEngine.UI;
 using VRUI;
 
 
-namespace BeatSaberCustomUI
+namespace CustomUI.Settings
 {
     public class SettingsUI : MonoBehaviour
     {

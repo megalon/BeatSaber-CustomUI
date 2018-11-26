@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BeatSaberCustomUI
+namespace CustomUI
 {
     class TableViewHelper : MonoBehaviour
     {

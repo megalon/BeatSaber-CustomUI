@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using VRUI;
 using Image = UnityEngine.UI.Image;
 
-namespace BeatSaberCustomUI
+namespace CustomUI.BeatSaber
 {
     public class BeatSaberUI : MonoBehaviour
     {

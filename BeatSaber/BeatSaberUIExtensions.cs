@@ -9,7 +9,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using VRUI;
 
-namespace BeatSaberCustomUI
+namespace CustomUI.BeatSaber
 {
     public static class BeatSaberUIExtensions
     {
