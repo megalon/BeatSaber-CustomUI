@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace BeatSaberCustomUI
 {
@@ -48,6 +49,7 @@ namespace BeatSaberCustomUI
             gameObject.transform.localPosition = Vector3.zero;
             gameObject.transform.localScale = Vector3.one;
             gameObject.transform.rotation = Quaternion.identity;
+            gameObject.SetActive(false); //All options start disabled
 
             var gmt = gameObject.GetComponentInChildren<GameplayModifierToggle>();
             if (gmt != null)
@@ -65,7 +67,6 @@ namespace BeatSaberCustomUI
         private IEnumerator OnIsSet()
         {
             while (instance.GetPrivateField<TextMeshProUGUI>("_nameText").text == "!NOT SET!") yield return null;
-            gameObject.SetActive(false); //All options start disabled
             instance.GetPrivateField<TextMeshProUGUI>("_nameText").text = optionName;
             if (hintText != String.Empty)
             {
@@ -77,7 +78,6 @@ namespace BeatSaberCustomUI
                 hoverHint.SetPrivateField("_hoverHintController", hoverHintController);
             }
         }
-
     }
 
     public class MultiSelectOption : GameOption

@@ -120,7 +120,7 @@ namespace BeatSaberCustomUI
                 if (_pageDownButton == null)
                 {
                     _pageDownButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().First(x => (x.name == "PageDownButton")), _mainSettingsTableView.transform, false);
-
+                    
                     (_pageDownButton.transform as RectTransform).anchorMin = new Vector2(0.5f, 0.5f);
                     (_pageDownButton.transform as RectTransform).anchorMax = new Vector2(0.5f, 0.5f);
                     (_pageDownButton.transform as RectTransform).anchoredPosition = new Vector2(0f, -24f);
