@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using CustomUI.Utilities;
+using CustomUI.Settings;
 
 namespace CustomUI.GameplaySettings
 {
