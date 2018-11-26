@@ -69,6 +69,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BeatSaberUI.cs" />
+    <Compile Include="BeatSaberUIExtensions.cs" />
     <Compile Include="GameplaySettingsTypes.cs" />
     <Compile Include="GameplaySettingsUI.cs" />
     <Compile Include="Plugin.cs" />
